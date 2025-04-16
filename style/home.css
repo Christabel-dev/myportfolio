@@ -200,13 +200,13 @@ p {
 
 /* Hello Section */
 #hello {
-	background-image: url(/images/chris2.jpg);
+	background-image: url(/images/chris6.jpg);
 	background-size: cover;
 	background-position: top center;
 	position: relative;
 	z-index: 1;
 	background-size: contain;
-	background-repeat: no-repeat;
+	
 }
 #hello::after {
 	content: '';
