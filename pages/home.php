@@ -4,8 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/style/home.css">
-  <title>My Website</title>
+  <link rel="stylesheet" href="/myporfolio/style/home.css">
+  <link rel="icon" href="/myporfolio/images/chris6.jpg">
+  <title>My Portfolio</title>
 </head>
 
 <body>
@@ -27,7 +28,11 @@
             <li><a href="#services" data-after="Service">Services</a></li>
             <li><a href="#projects" data-after="Projects">Projects</a></li>
             <li><a href="#about" data-after="About">About</a></li>
-            <li><a href="#contact" data-after="Contact">Contact</a></li>
+            <li><a href="#contact" data-after="Contact">Contact</a></li>  
+            <li><a href="./blogs.php">Blogs</a></li> 
+            <li><a href="./gallery.php">Gallery</a></li>
+            <li><a href="./login.php" >Log In</a></li>
+                      
           </ul>
         </div>
       </div>
@@ -105,7 +110,7 @@
             </p>
           </div>
           <div class="project-img">
-            <img src="/images/chris6.jpg" alt="img">
+            <img src="/myporfolio/images/chris6.jpg" alt="img">
           </div>
         </div>
         <div class="project-item">
@@ -116,7 +121,7 @@
             </p>
           </div>
           <div class="project-img">
-            <img src="/images/chris2.jpg" alt="img">
+            <img src="/myporfolio/images/chris2.jpg" alt="img">
           </div>
         </div>
         <div class="project-item">
@@ -127,7 +132,7 @@
             </p>
           </div>
           <div class="project-img">
-            <img src="/images/chris3.jpg" alt="img">
+            <img src="/myporfolio/images/chris3.jpg" alt="img">
           </div>
         </div>
         <div class="project-item">
@@ -138,7 +143,7 @@
             <p>Assist teams implement efficient QA processes—from test planning to release—ensuring high quality assurance standard</p>
           </div>
           <div class="project-img">
-            <img src="/images/chris4.jpg" alt="img">
+            <img src="/myporfolio/images/chris4.jpg" alt="img">
           </div>
         </div>
         <div class="project-item">
@@ -148,7 +153,7 @@
             <p>Participating in the overall quality assurance process for the mobile application, including regression testing and user acceptance testing.</p>
           </div>
           <div class="project-img">
-            <img src="/images/chris5.jpg" alt="img">
+            <img src="/myporfolio/images/chris5.jpg" alt="img">
           </div>
         </div>
       </div>
@@ -157,25 +162,77 @@
   <!-- End Projects Section -->
 
   <!-- About Section -->
-  <section id="about">
+  <!--section id="about">
     <div class="about container">
       <div class="col-left">
         <div class="about-img">
-          <img src="/images/chris2.jpg" alt="img">
+          <img src="/myporfolio/images/chris2.jpg" alt="img">
         </div>
       </div>
       <div class="col-right">
         <h1 class="section-title">About <span>me</span></h1>
         <h2>Quality Assurance Engineer</h2>
-        <p>Basicaly, I perform hands-on, exploratory testing to catch bugs early and ensure the software works seamlessly across devices and browsers.
+        <p> I ensure that softwares work seamlessly across devices and browsers.
           Moreover, I build robust automated test scripts using tools like Selenium or Cypress to increase test coverage and speed up development cycles.
           I provide clear and detailed bug reports using tools like Jira or Trello, making it easy for developers to fix issues fast.
-         I assist teams set up efficient QA workflows, from test planning to release, making quality a consistent part of the development process.
+         I assist teams to set up efficient QA workflows, from test planning to release, making quality a consistent part of the development process.
         </p>
         <a href="#" class="cta">Download Resume</a>
       </div>
     </div>
-  </section>
+  </section-->
+  <?php
+// Database configuration
+$host = 'localhost';
+$dbname = 'admin';
+$username = 'root';
+$password = '';
+
+/**
+ * Get about me data from database
+ */
+function getAboutMeData() {
+    global $host, $dbname, $username, $password;
+    
+    try {
+        $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
+        $stmt = $conn->prepare("SELECT * FROM about LIMIT 1"); // Assuming you only need one row
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Using fetch() instead of fetchAll()
+    } catch(PDOException $e) {
+        error_log("Database error in getAboutMeData(): " . $e->getMessage());
+        return null;
+    }
+}
+
+// Get the data
+$aboutData = getAboutMeData();
+?>
+
+<section id="about">
+    <div class="about container">
+        <div class="col-left">
+            <div class="about-img">
+                <!-- Assuming your database has an 'image_path' column -->
+                <img src="/myporfolio/images/chris2.jpg" alt="About me image">
+            </div>
+        </div>
+        <div class="col-right">
+            <h1 class="section-title">About <span>me</span></h1>
+            <!-- Assuming your database has 'job_title' and 'description' columns -->
+            <h2><?php echo htmlspecialchars($aboutData['title']); ?></h2>
+            <p><?php echo nl2br(htmlspecialchars($aboutData['content'] 
+            )); ?></p>
+            <!-- Example for resume link if you have it in database -->
+            <?php if (!empty($aboutData['resume_link'])): ?>
+                <a href="<?php echo htmlspecialchars($aboutData['resume_link']); ?>" class="cta">Download Resume</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
   <!-- End About Section -->
 
   <!-- Contact Section -->
