@@ -1,5 +1,12 @@
 <?php
 session_start();
+
+// Check if user is not logged in
+if (!isset($_SESSION['user_id'])) {  // Added missing parenthesis here
+    // Redirect to login page
+    header("Location: login.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +16,49 @@ session_start();
     <title>Blog Admin Dashboard</title>
     <link rel="stylesheet" href="/myporfolio/style/home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        img { max-width: 100px; max-height: 100px; display: block; }
+        .form-container { margin: 30px 0; padding: 25px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input[type="text"], textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            box-sizing: border-box;
+        }
+        textarea { height: 120px; resize: vertical; }
+        .btn { 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 4px; 
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-update { background-color: #4CAF50; color: white; }
+        .btn-update:hover { background-color: #45a049; }
+        .btn-delete { background-color: #f44336; color: white; }
+        .btn-delete:hover { background-color: #d32f2f; }
+        .btn-edit { 
+            background-color: #2196F3; 
+            color: white; 
+            padding: 8px 15px; 
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .btn-edit:hover { background-color: #0b7dda; }
+        .action-cell { white-space: nowrap; }
+        .no-projects { padding: 20px; text-align: center; color: #666; }
+        .current-image { margin-top: 10px; }
+    </style>
 </head>
 <body>
     <div class="admin-container">
@@ -32,9 +82,9 @@ session_start();
             </nav>
             
             <div class="sidebar-footer">
-                <button id="logout-btn" class="btn-logout">
+                <a  href="./logout.php"><button id="logout-btn" class="btn-logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+                </button></a>
             </div>
         </aside>
 
@@ -411,36 +461,20 @@ session_start();
         </form>
     </div>
     
-    <!-- Projects Table -->
-    <div class="projects-table">
-        <div class="table-actions">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search projects...">
-            </div>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <th>Title</th>
-                    <th>Technologies</th>
-                    <th>Description</th>
-                    <th>Image</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!--?php
-                // Include your PHP file with the functions
-                require_once './projectmanagementdetails.php';
-                
-                // Display the projects table
-                displayProjectsTable();
-                ?--g>
-            </tbody>
-        </table>
-    </div>
+       
+       
+            
+    <!-- Project Table -->
+    <div class="users-section">
+    <h2>Projects</h2>
+    <?php
+    // Include your PHP file with the functions
+    require_once './aboutusdetails.php';
+    
+    // Display the about us table
+    displayProjectTable();
+    ?>  
+</div>
 </section>
                 
                 <!-- Comments Section -->
@@ -757,6 +791,7 @@ session_start();
                 if (confirm('Are you sure you want to logout?')) {
                     // In real app, call logout API then redirect
                     window.location.href = 'login.php';
+                    
                 }
             });
         });

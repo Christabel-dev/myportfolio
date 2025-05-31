@@ -96,7 +96,7 @@
   <!-- End Service Section -->
 
   <!-- Projects Section -->
-  <section id="projects">
+  <!--section id="projects">
     <div class="projects container">
       <div class="projects-header">
         <h1 class="section-title">Recent <span>Projects</span></h1>
@@ -158,9 +158,72 @@
         </div>
       </div>
     </div>
-  </section>
-  <!-- End Projects Section -->
+  </section-->
+    <!-- End Projects Section -->
+<?php
+// Database configuration (db_connection.php)
+$host = 'localhost';
+$dbname = 'admin';
+$username = 'root';
+$password = '';
 
+try {
+    // Create a PDO connection
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    
+    // Set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Set default fetch mode to associative array
+    $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    
+} catch(PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>
+
+<section id="projects">
+    <div class="projects container">
+        <div class="projects-header">
+            <h1 class="section-title">Recent <span>Projects</span></h1>
+        </div>
+        <div class="all-projects">
+            <?php
+            try {
+                // Query to get all projects from database
+                $stmt = $conn->query("SELECT * FROM projects ORDER BY created_at DESC");
+                $projects = $stmt->fetchAll();
+                
+                if (count($projects) > 0) {
+                    foreach ($projects as $project) {
+                        ?>
+                        <div class="project-item">
+                            <div class="project-info">
+                                <h1><?php echo htmlspecialchars($project['title']); ?></h1>
+                                <h2><?php echo htmlspecialchars($project['technologies']); ?></h2>
+                                <p><?php echo htmlspecialchars($project['description']); ?></p>
+                            </div>
+                            <div class="project-img">
+                                <?php if (!empty($project['image_path'])): ?>
+                                    <img src="<?php echo htmlspecialchars($project['image_path']); ?>" 
+                                         alt="<?php echo htmlspecialchars($project['title']); ?>">
+                                <?php else: ?>
+                                    <img src="/myporfolio/images/chris1.jpg" alt="Default project image">
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    echo '<p class="no-projects">No projects found. Please add some projects.</p>';
+                }
+            } catch(PDOException $e) {
+                echo '<p class="error">Error loading projects: ' . htmlspecialchars($e->getMessage()) . '</p>';
+            }
+            ?>
+        </div>
+    </div>
+</section>
   <!-- About Section -->
   <!--section id="about">
     <div class="about container">
